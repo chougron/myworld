@@ -1,0 +1,20 @@
+version: "3.1"
+
+services:
+  map-editor-client:
+    image: node:9
+    working_dir: /src/map-editor/client
+    command: npm start
+    volumes:
+      - ./src:/src/
+    ports:
+      - "8888:8080"
+
+  map-editor-server:
+    image: node:9
+    working_dir: /src/map-editor/server
+    command: npm start
+    volumes:
+      - ./src:/src/
+    ports:
+      - "8999:8999"
