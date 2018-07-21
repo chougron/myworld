@@ -11,7 +11,9 @@
   "author": "Camille Hougron <camille.hougron@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "file-loader": "^1.1.11",
     "http-server": "^0.11.1",
+    "prettier": "^1.13.7",
     "ts-loader": "^4.4.2",
     "typescript": "^2.9.2",
     "webpack": "^4.16.0",
