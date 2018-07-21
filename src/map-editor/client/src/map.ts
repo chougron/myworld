@@ -6,6 +6,8 @@ import TileDrawer from './engine/tiledrawer';
 export default class Map {
     public mapdrawer: MapDrawer;
 
+    private mapData: Tile[] = [];
+
     public getCurrentTilesetCell: () => number;
 
     constructor(getCurrentTilesetCell: () => number) {
@@ -26,7 +28,19 @@ export default class Map {
         const oldId = TileDrawer.getTileDomId(coordinates);
         document.getElementById(oldId) && document.getElementById(oldId).remove();
 
-        this.mapdrawer.addTile(new Tile(coordinates, currentTilesetCell));
+        const mapDataIndex = this.mapData.findIndex(
+            (tile: Tile) => tile.getX() === coordinates.x && tile.getY() === coordinates.y,
+        );
+        if (mapDataIndex !== -1) {
+            this.mapData.splice(mapDataIndex, 1);
+        }
+
+        const tile = new Tile(coordinates, currentTilesetCell);
+
+        this.mapdrawer.addTile(tile);
+        this.mapData.push(tile);
+
+        this.save();
     };
 
     private getCoordinatesFromMapClick = (event: MouseEvent) => {
@@ -35,5 +49,23 @@ export default class Map {
         const yPx = event.clientY - parseInt(mapLayer.style.top);
 
         return new Coordinates(Math.floor(xPx / TileDrawer.SIZE), Math.floor(yPx / TileDrawer.SIZE));
+    };
+
+    public save = () => {
+        const json = this.dataToJson();
+
+        console.log(json);
+    };
+
+    private dataToJson = () => {
+        const json = this.mapData.map((tile: Tile) => {
+            return {
+                x: tile.getX(),
+                y: tile.getY(),
+                tile: tile.tilesetNumber,
+            };
+        });
+
+        return json;
     };
 }
