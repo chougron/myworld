@@ -8,23 +8,45 @@ export default class Map {
 
     private mapData: Tile[] = [];
 
+    private mouseDownCell?: Coordinates;
     public getCurrentTilesetCell: () => number;
 
     constructor(getCurrentTilesetCell: () => number) {
         this.getCurrentTilesetCell = getCurrentTilesetCell;
 
         this.mapdrawer = new MapDrawer();
-        this.mapdrawer.getDrawer().onclick = this.paintCell;
+        this.mapdrawer.getDrawer().onmousedown = this.mouseDown;
+        this.mapdrawer.getDrawer().onmouseup = this.mouseUp;
     }
 
-    private paintCell = (event: MouseEvent): void => {
+    private mouseDown = (event: MouseEvent): void => {
+        this.mouseDownCell = this.getCoordinatesFromMapClick(event);
+    };
+
+    private mouseUp = (event: MouseEvent): void => {
+        const coordinates = this.getCoordinatesFromMapClick(event);
+
+        this.paintCell(this.mouseDownCell, coordinates);
+    };
+
+    private paintCell = (down: Coordinates, up: Coordinates): void => {
         const currentTilesetCell = this.getCurrentTilesetCell();
         if (currentTilesetCell === undefined) {
             return;
         }
 
-        const coordinates = this.getCoordinatesFromMapClick(event);
+        for (let x = Math.min(down.x, up.x); x <= Math.max(down.x, up.x); x++) {
+            for (let y = Math.min(down.y, up.y); y <= Math.max(down.y, up.y); y++) {
+                const coordinates = new Coordinates(x, y);
+                this.removeOldCell(coordinates);
+                this.addNewCell(coordinates);
+            }
+        }
 
+        this.save();
+    };
+
+    private removeOldCell = (coordinates: Coordinates): void => {
         const oldId = TileDrawer.getTileDomId(coordinates);
         document.getElementById(oldId) && document.getElementById(oldId).remove();
 
@@ -34,13 +56,14 @@ export default class Map {
         if (mapDataIndex !== -1) {
             this.mapData.splice(mapDataIndex, 1);
         }
+    };
 
+    private addNewCell = (coordinates: Coordinates): void => {
+        const currentTilesetCell = this.getCurrentTilesetCell();
         const tile = new Tile(coordinates, currentTilesetCell);
 
         this.mapdrawer.addTile(tile);
         this.mapData.push(tile);
-
-        this.save();
     };
 
     private getCoordinatesFromMapClick = (event: MouseEvent) => {
