@@ -18,3 +18,15 @@ services:
       - ./src:/src/
     ports:
       - "8999:8999"
+    environment:
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: root
+
+  mongo:
+    image: mongo:4.0
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    volumes:
+      - ./data/db:/data/db
