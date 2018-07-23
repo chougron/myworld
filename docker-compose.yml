@@ -4,7 +4,7 @@ services:
   map-editor-client:
     image: node:9
     working_dir: /src/map-editor/client
-    command: npm start
+    entrypoint: ./entrypoint.sh
     volumes:
       - ./src:/src/
     ports:
@@ -13,7 +13,7 @@ services:
   map-editor-server:
     image: node:9
     working_dir: /src/map-editor/server
-    command: npm start
+    entrypoint: ./entrypoint.sh
     volumes:
       - ./src:/src/
     ports:
