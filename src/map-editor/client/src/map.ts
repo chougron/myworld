@@ -2,11 +2,16 @@ import MapDrawer from './engine/mapdrawer';
 import Tile from './utils/tile';
 import Coordinates from './utils/coordinates';
 import TileDrawer from './engine/tiledrawer';
+import IMap from '../../../shared/types/map';
+import ITile from '../../../shared/types/tile';
+import Axios from 'axios';
 
-export default class Map {
+export default class Map implements IMap {
     public mapdrawer: MapDrawer;
 
-    private mapData: Tile[] = [];
+    public _id?: string;
+    public name: string = 'Map';
+    public tiles: Tile[][] = [[]];
 
     private mouseDownCell?: Coordinates;
     public getCurrentTilesetCell: () => number;
@@ -50,11 +55,11 @@ export default class Map {
         const oldId = TileDrawer.getTileDomId(coordinates);
         document.getElementById(oldId) && document.getElementById(oldId).remove();
 
-        const mapDataIndex = this.mapData.findIndex(
+        const mapDataIndex = this.tiles[0].findIndex(
             (tile: Tile) => tile.getX() === coordinates.x && tile.getY() === coordinates.y,
         );
         if (mapDataIndex !== -1) {
-            this.mapData.splice(mapDataIndex, 1);
+            this.tiles[0].splice(mapDataIndex, 1);
         }
     };
 
@@ -63,7 +68,7 @@ export default class Map {
         const tile = new Tile(coordinates, currentTilesetCell);
 
         this.mapdrawer.addTile(tile);
-        this.mapData.push(tile);
+        this.tiles[0].push(tile);
     };
 
     private getCoordinatesFromMapClick = (event: MouseEvent) => {
@@ -74,20 +79,28 @@ export default class Map {
         return new Coordinates(Math.floor(xPx / TileDrawer.SIZE), Math.floor(yPx / TileDrawer.SIZE));
     };
 
-    public save = () => {
+    public save = async () => {
         const json = this.dataToJson();
-
-        console.log(json);
+        const answer = await Axios.post('http://localhost:8999/maps', json);
+        this._id = answer.data._id;
     };
 
-    private dataToJson = () => {
-        const json = this.mapData.map((tile: Tile) => {
-            return {
-                x: tile.getX(),
-                y: tile.getY(),
-                tile: tile.tilesetNumber,
-            };
-        });
+    private dataToJson = (): IMap => {
+        const json = {
+            _id: this._id,
+            name: this.name,
+            tiles: this.tiles.map(
+                (tiles: Tile[]): ITile[] =>
+                    tiles.map(
+                        (tile: Tile): ITile => {
+                            return {
+                                position: { x: tile.getX(), y: tile.getY() },
+                                tilesetNumber: tile.tilesetNumber,
+                            };
+                        },
+                    ),
+            ),
+        };
 
         return json;
     };

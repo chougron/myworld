@@ -12,9 +12,7 @@ export default class Database {
 
     private static createInstance = async (): Promise<void> => {
         const client = mongodb.MongoClient;
-        const connected = await client.connect(
-            `mongodb://${process.env.DATABASE_USERNAME}:${process.env.DATABASE_PASSWORD}@mongo:27017`,
-        );
+        const connected = await client.connect(`mongodb://mongo:27017`);
         Database.instance = connected.db('myworld');
     };
 }

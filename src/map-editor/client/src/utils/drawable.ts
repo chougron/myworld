@@ -1,7 +1,7 @@
 import Coordinates from './coordinates';
 
 export default class Drawable {
-    protected position: Coordinates;
+    public position: Coordinates;
 
     constructor(position: Coordinates) {
         this.position = position;

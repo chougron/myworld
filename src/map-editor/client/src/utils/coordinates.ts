@@ -1,4 +1,6 @@
-export default class Coordinates {
+import ICoordinates from '../../../../shared/types/coordinates';
+
+export default class Coordinates implements ICoordinates {
     public x: number;
     public y: number;
 

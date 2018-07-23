@@ -1,20 +1,11 @@
 import { Request, Response, Router } from 'express';
-import Database from '../database';
+import { saveOrReplace } from '../services/map';
 
 const router: Router = Router();
 
 router.post('/', async (req: Request, res: Response) => {
-    const database = await Database.getInstance();
-    await database.collection('maps').insertOne({ id: 1, name: 'Map 1', data: 'Blabla' });
-
-    const maps = await database
-        .collection('maps')
-        .find()
-        .toArray();
-
-    console.log(maps);
-
-    res.send('Got a POST request');
+    const map = await saveOrReplace(req.body);
+    return res.send(map);
 });
 
 export const MapController: Router = router;
