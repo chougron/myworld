@@ -22,4 +22,10 @@ const saveOrReplace = async (map: IMap): Promise<IMap> => {
     return collection.findOne({ _id: saved.insertedId });
 };
 
-export { saveOrReplace };
+const getAll = async (): Promise<IMap[]> => {
+    const collection = await getCollection();
+
+    return collection.find().toArray();
+};
+
+export { saveOrReplace, getAll };

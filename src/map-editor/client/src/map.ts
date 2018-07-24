@@ -1,10 +1,8 @@
-import MapDrawer from './engine/mapdrawer';
+import MapDrawer from './views/mapdrawer';
 import Tile from './utils/tile';
 import Coordinates from './utils/coordinates';
-import TileDrawer from './engine/tiledrawer';
+import TileDrawer from './views/tiledrawer';
 import IMap from '../../../shared/types/map';
-import ITile from '../../../shared/types/tile';
-import Axios from 'axios';
 
 export default class Map implements IMap {
     public mapdrawer: MapDrawer;
@@ -47,8 +45,6 @@ export default class Map implements IMap {
                 this.addNewCell(coordinates);
             }
         }
-
-        this.save();
     };
 
     private removeOldCell = (coordinates: Coordinates): void => {
@@ -77,31 +73,5 @@ export default class Map implements IMap {
         const yPx = event.clientY - parseInt(mapLayer.style.top);
 
         return new Coordinates(Math.floor(xPx / TileDrawer.SIZE), Math.floor(yPx / TileDrawer.SIZE));
-    };
-
-    public save = async () => {
-        const json = this.dataToJson();
-        const answer = await Axios.post('http://localhost:8999/maps', json);
-        this._id = answer.data._id;
-    };
-
-    private dataToJson = (): IMap => {
-        const json = {
-            _id: this._id,
-            name: this.name,
-            tiles: this.tiles.map(
-                (tiles: Tile[]): ITile[] =>
-                    tiles.map(
-                        (tile: Tile): ITile => {
-                            return {
-                                position: { x: tile.getX(), y: tile.getY() },
-                                tilesetNumber: tile.tilesetNumber,
-                            };
-                        },
-                    ),
-            ),
-        };
-
-        return json;
     };
 }

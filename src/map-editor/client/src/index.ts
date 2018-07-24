@@ -1,14 +1,18 @@
 import TilesetChooser from './tilesetchooser';
 import Map from './map';
-import TilesetDrawer from './engine/tilesetdrawer';
+import TilesetDrawer from './views/tilesetdrawer';
+import Menu from './menu';
+import { saveMap } from './services/map';
 
 class MapEditorClient {
     public map: Map;
     public tilesetchooser: TilesetChooser;
+    public menu: Menu;
 
     public start = () => {
         this.map = new Map(this.getCurrentTilesetCell);
         this.tilesetchooser = new TilesetChooser();
+        this.menu = new Menu(this.onSave);
     };
 
     public getCurrentTilesetCell = () => {
@@ -19,6 +23,12 @@ class MapEditorClient {
         }
 
         return;
+    };
+
+    public onSave = async (event: MouseEvent): Promise<void> => {
+        const data = await saveMap(this.map);
+
+        this.map._id = data._id;
     };
 }
 

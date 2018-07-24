@@ -10,16 +10,13 @@ export default class TilesetDrawer {
 
     constructor() {
         const body = document.body;
-        body.style.height = '100%';
-        body.style.width = '100%';
-        body.style.margin = '0';
-        body.style.padding = '0';
 
         this.drawer = document.createElement('div');
         this.drawer.style.border = '1px solid black';
         this.drawer.style.width = TilesetDrawer.WIDTH_CELL * TileDrawer.SIZE + 'px';
         this.drawer.style.right = '0';
-        this.drawer.style.height = '100%';
+        this.drawer.style.top = '40px';
+        this.drawer.style.height = 'calc(100% - 40px)';
         this.drawer.style.boxSizing = 'border-box';
         this.drawer.style.position = 'absolute';
         this.drawer.style.overflow = 'hidden';

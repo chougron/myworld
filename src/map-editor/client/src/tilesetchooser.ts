@@ -1,4 +1,4 @@
-import TilesetDrawer from './engine/tilesetdrawer';
+import TilesetDrawer from './views/tilesetdrawer';
 import Coordinates from './utils/coordinates';
 
 export default class TilesetChooser {
