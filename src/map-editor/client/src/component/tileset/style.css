@@ -1,0 +1,10 @@
+#tileset {
+    border: 1px solid black;
+    width: 640px;
+    right: 0;
+    top: 40px;
+    height: calc(100% - 40px);
+    box-sizing: border-box;
+    position: absolute;
+    overflow: hidden;
+}

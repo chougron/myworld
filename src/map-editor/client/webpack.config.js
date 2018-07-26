@@ -2,23 +2,27 @@ const path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-    entry: './src/index.ts',
+    entry: './src/main.tsx',
     devtool: 'inline-source-map',
     module: {
         rules: [
             {
                 test: /\.tsx?$/,
-                use: 'ts-loader',
+                use: ['babel-loader', 'ts-loader'],
                 exclude: /node_modules/,
             },
             {
                 test: /\.(png|svg|jpg|gif)$/,
                 use: ['file-loader'],
             },
+            {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader'],
+            },
         ],
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.js'],
+        extensions: ['.tsx', '.ts', '.js', '.css', '.png'],
     },
     output: {
         filename: 'bundle.js',
