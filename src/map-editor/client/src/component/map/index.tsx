@@ -1,13 +1,12 @@
 import * as React from 'react';
 import IMap from '../../../../../shared/types/map';
 import './style.css';
-import Coordinates from '../../utils/coordinates';
-import TileDrawer from '../../views/tiledrawer';
 import ITile from '../../../../../shared/types/tile';
 import Tile from '../tile';
+import ICoordinates from '../../../../../shared/types/coordinates';
 
 interface Props {
-    getCurrentTilesetCell: () => number;
+    getCurrentTilesetCell: () => number | undefined;
 }
 
 interface State {
@@ -15,7 +14,7 @@ interface State {
 }
 
 class Map extends React.Component<Props, State> {
-    mouseDownCell?: Coordinates;
+    mouseDownCell?: ICoordinates;
     mapLayer: HTMLDivElement;
 
     constructor(props: Props) {
@@ -53,7 +52,7 @@ class Map extends React.Component<Props, State> {
         this.paintCell(this.mouseDownCell, coordinates);
     };
 
-    paintCell = (down: Coordinates, up: Coordinates): void => {
+    paintCell = (down: ICoordinates, up: ICoordinates): void => {
         const currentTilesetCell = this.props.getCurrentTilesetCell();
         if (currentTilesetCell === undefined) {
             return;
@@ -62,7 +61,7 @@ class Map extends React.Component<Props, State> {
         let tiles = this.state.map.tiles[0];
         for (let x = Math.min(down.x, up.x); x <= Math.max(down.x, up.x); x++) {
             for (let y = Math.min(down.y, up.y); y <= Math.max(down.y, up.y); y++) {
-                const coordinates = new Coordinates(x, y);
+                const coordinates = { x, y };
                 // Remove old tile
                 tiles = tiles.filter((tile: ITile) => {
                     return tile.position.x !== coordinates.x || tile.position.y !== coordinates.y;
@@ -84,13 +83,13 @@ class Map extends React.Component<Props, State> {
         console.log('new tiles');
     };
 
-    getCoordinatesFromMapClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    getCoordinatesFromMapClick = (event: React.MouseEvent<HTMLDivElement>): ICoordinates => {
         const mapLayer = this.mapLayer;
         const style = window.getComputedStyle(mapLayer);
         const xPx = event.clientX - parseInt(style.left);
         const yPx = event.clientY - parseInt(style.top);
 
-        return new Coordinates(Math.floor(xPx / TileDrawer.SIZE), Math.floor(yPx / TileDrawer.SIZE));
+        return { x: Math.floor(xPx / Tile.SIZE), y: Math.floor(yPx / Tile.SIZE) };
     };
 }
 
