@@ -1,8 +1,7 @@
 import * as React from 'react';
-import './style.css';
 import ITile from '../../../../../shared/types/tile';
 import Tile from '../tile';
-import ICoordinates from '../../../../../shared/types/coordinates';
+import './style.css';
 
 interface Props {
     selectTile: (tile: ITile) => void;
