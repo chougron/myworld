@@ -3,13 +3,16 @@ import { render } from 'react-dom';
 import IMap from '../../../shared/types/map';
 import ITile from '../../../shared/types/tile';
 import Map from './component/map';
+import MapList from './component/mapList';
 import Menu from './component/menu';
 import Tileset from './component/tileset';
-import { saveMap } from './services/map';
+import { loadMaps, saveMap } from './services/map';
 
 interface State {
     selected: ITile | undefined;
     map: IMap;
+    displayedMapList: boolean;
+    loadedMaps: IMap[];
 }
 
 class App extends React.Component<{}, State> {
@@ -22,6 +25,8 @@ class App extends React.Component<{}, State> {
                 name: '',
                 tiles: [[]],
             },
+            displayedMapList: false,
+            loadedMaps: [],
         };
     }
 
@@ -33,8 +38,9 @@ class App extends React.Component<{}, State> {
                     tiles={this.state.map.tiles}
                     setTiles={this.setTiles}
                 />
-                <Menu name={this.state.map.name} setName={this.setName} save={this.save} />
+                <Menu name={this.state.map.name} setName={this.setName} save={this.save} load={this.displayMapList} />
                 <Tileset selectTile={this.selectTile} />
+                {this.state.displayedMapList && <MapList maps={this.state.loadedMaps} />}
             </>
         );
     }
@@ -50,6 +56,17 @@ class App extends React.Component<{}, State> {
             map: { ...this.state.map, name },
         });
     };
+
+    displayMapList = async (): Promise<void> => {
+        const maps = await loadMaps();
+        this.setState({
+            ...this.state,
+            loadedMaps: maps,
+            displayedMapList: true,
+        });
+    };
+
+    loadMap = (): void => {};
 
     setTiles = (tiles: ITile[]): void => {
         this.setState({

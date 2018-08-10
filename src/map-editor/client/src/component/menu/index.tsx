@@ -5,6 +5,7 @@ interface Props {
     name: string;
     setName: (name: string) => void;
     save: () => void;
+    load: () => void;
 }
 
 class Menu extends React.Component<Props> {
@@ -20,6 +21,7 @@ class Menu extends React.Component<Props> {
                     onChange={this.changeName}
                 />
                 <input type="submit" value="Save" onClick={this.props.save} />
+                <input type="submit" value="Load" onClick={this.props.load} />
             </div>
         );
     }
