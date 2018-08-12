@@ -13,6 +13,7 @@ interface State {
     map: IMap;
     displayedMapList: boolean;
     loadedMaps: IMap[];
+    currentLayer: number;
 }
 
 class App extends React.Component<{}, State> {
@@ -27,6 +28,7 @@ class App extends React.Component<{}, State> {
             },
             displayedMapList: false,
             loadedMaps: [],
+            currentLayer: 1,
         };
     }
 
@@ -37,19 +39,37 @@ class App extends React.Component<{}, State> {
                     getCurrentTilesetCell={this.getCurrentTilesetCell}
                     tiles={this.state.map.tiles}
                     setTiles={this.setTiles}
+                    currentLayer={this.state.currentLayer}
                 />
-                <Menu name={this.state.map.name} setName={this.setName} save={this.save} load={this.displayMapList} />
+                <Menu
+                    name={this.state.map.name}
+                    setName={this.setName}
+                    save={this.save}
+                    load={this.displayMapList}
+                    new={this.newMap}
+                    currentLayer={this.state.currentLayer}
+                    maxLayer={this.state.map.tiles.length}
+                    setLayer={this.setCurrentLayer}
+                    removeLayer={this.removeLayer}
+                    addLayer={this.addLayer}
+                />
                 <Tileset selectTile={this.selectTile} />
-                {this.state.displayedMapList && <MapList maps={this.state.loadedMaps} />}
+                {this.state.displayedMapList && <MapList maps={this.state.loadedMaps} loadMap={this.loadMap} />}
             </>
         );
     }
 
+    /**
+     * Save the current map
+     */
     save = async (): Promise<void> => {
         const map: IMap = await saveMap(this.state.map);
         this.state.map._id = map._id;
     };
 
+    /**
+     * Set the name of the current map
+     */
     setName = (name: string): void => {
         this.setState({
             ...this.state,
@@ -57,6 +77,48 @@ class App extends React.Component<{}, State> {
         });
     };
 
+    /**
+     * Set the current layer used
+     */
+    setCurrentLayer = (layer: number): void => {
+        this.setState({
+            ...this.state,
+            currentLayer: layer,
+        });
+    };
+
+    /**
+     * Remove last layer from the map
+     */
+    removeLayer = (): void => {
+        const tiles = this.state.map.tiles;
+        if (tiles.length <= 1) {
+            return;
+        }
+        tiles.splice(-1, 1);
+        const currentLayer = this.state.currentLayer > tiles.length ? tiles.length : this.state.currentLayer;
+        this.setState({
+            ...this.state,
+            map: { ...this.state.map, tiles },
+            currentLayer,
+        });
+    };
+
+    /**
+     * Add a new layer to the map
+     */
+    addLayer = (): void => {
+        const tiles = this.state.map.tiles;
+        tiles.push([]);
+        this.setState({
+            ...this.state,
+            map: { ...this.state.map, tiles },
+        });
+    };
+
+    /**
+     * Display the list of maps, to load one
+     */
     displayMapList = async (): Promise<void> => {
         const maps = await loadMaps();
         this.setState({
@@ -66,19 +128,54 @@ class App extends React.Component<{}, State> {
         });
     };
 
-    loadMap = (): void => {};
-
-    setTiles = (tiles: ITile[]): void => {
+    /**
+     * Load the selected map
+     */
+    loadMap = (map: IMap): void => {
         this.setState({
             ...this.state,
-            map: { ...this.state.map, tiles: [tiles] },
+            map,
+            displayedMapList: false,
+            currentLayer: 1,
         });
     };
 
+    /**
+     * Start a new map
+     */
+    newMap = (): void => {
+        this.setState({
+            ...this.state,
+            map: {
+                name: '',
+                tiles: [[]],
+            },
+            currentLayer: 1,
+        });
+    };
+
+    /**
+     * Set the tiles to the current map
+     */
+    setTiles = (tiles: ITile[]): void => {
+        const mapTiles = this.state.map.tiles;
+        mapTiles[this.state.currentLayer - 1] = tiles;
+        this.setState({
+            ...this.state,
+            map: { ...this.state.map, tiles: mapTiles },
+        });
+    };
+
+    /**
+     * Get the current tileset cell number
+     */
     getCurrentTilesetCell = (): number | undefined => {
         return this.state.selected ? this.state.selected.tilesetNumber : undefined;
     };
 
+    /**
+     * Select a tile on the tileset
+     */
     selectTile = (tile: ITile): void => {
         this.setState({
             ...this.state,

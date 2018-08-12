@@ -39,7 +39,7 @@ class Tileset extends React.Component<Props, State> {
                         this.click(tile);
                     };
                     const selected = this.isSelected(tile);
-                    return <Tile tile={tile} onClick={onClick} selected={selected} border={true} />;
+                    return <Tile tile={tile} onClick={onClick} selected={selected} border={true} layer={1} />;
                 })}
             </div>
         );

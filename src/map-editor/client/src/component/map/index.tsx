@@ -8,6 +8,7 @@ interface Props {
     getCurrentTilesetCell: () => number | undefined;
     setTiles: (tiles: ITile[]) => void;
     tiles: ITile[][];
+    currentLayer: number;
 }
 
 class Map extends React.Component<Props> {
@@ -23,7 +24,11 @@ class Map extends React.Component<Props> {
                     onMouseDown={this.mouseDown}
                     onMouseUp={this.mouseUp}
                 >
-                    {this.props.tiles[0].map((tile: ITile) => <Tile tile={tile} />)}
+                    {this.props.tiles.map((tiles: ITile[], index) => {
+                        return index <= this.props.currentLayer - 1
+                            ? tiles.map((tile: ITile) => <Tile tile={tile} layer={index} />)
+                            : null;
+                    })}
                 </div>
             </div>
         );
@@ -38,13 +43,17 @@ class Map extends React.Component<Props> {
         this.paintCell(this.mouseDownCell, coordinates);
     };
 
+    /**
+     * Paint the cells of the current layer
+     */
     paintCell = (down: ICoordinates, up: ICoordinates): void => {
         const currentTilesetCell = this.props.getCurrentTilesetCell();
         if (currentTilesetCell === undefined) {
             return;
         }
 
-        let tiles = this.props.tiles[0];
+        let tiles =
+            this.props.tiles.length >= this.props.currentLayer ? this.props.tiles[this.props.currentLayer - 1] : [];
         for (let x = Math.min(down.x, up.x); x <= Math.max(down.x, up.x); x++) {
             for (let y = Math.min(down.y, up.y); y <= Math.max(down.y, up.y); y++) {
                 const coordinates = { x, y };

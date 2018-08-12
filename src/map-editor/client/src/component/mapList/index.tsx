@@ -1,14 +1,20 @@
 import * as React from 'react';
 import IMap from '../../../../../shared/types/map';
 import './style.css';
+import MapListTable from './table';
 
 interface Props {
     maps: IMap[];
+    loadMap: (map: IMap) => void;
 }
 
 class MapList extends React.Component<Props> {
     render() {
-        return <div id="mapList">{this.props.maps.map((map: IMap) => <div key={map._id}>{map.name}</div>)}</div>;
+        return (
+            <div id="mapList">
+                <MapListTable maps={this.props.maps} loadMap={this.props.loadMap} />
+            </div>
+        );
     }
 }
 

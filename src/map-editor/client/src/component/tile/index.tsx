@@ -9,6 +9,7 @@ interface Props {
     onClick?: () => void;
     selected?: boolean;
     border?: boolean;
+    layer: number;
 }
 
 class Tile extends React.Component<Props> {
@@ -30,6 +31,7 @@ class Tile extends React.Component<Props> {
         const tilesetCoordinates = getCoordinatesFromTilesetNumber(this.props.tile.tilesetNumber, Tileset.WIDTH);
         const backgroundPositionX = -tilesetCoordinates.x * Tile.SIZE - offsetBackground;
         const backgroundPositionY = -tilesetCoordinates.y * Tile.SIZE - offsetBackground;
+        const zIndex = 10 + this.props.layer;
 
         return (
             <div
@@ -46,6 +48,7 @@ class Tile extends React.Component<Props> {
                     backgroundPositionY,
                     border,
                     boxSizing,
+                    zIndex,
                 }}
             />
         );
