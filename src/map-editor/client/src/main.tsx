@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { render } from 'react-dom';
+import ICoordinates from '../../../shared/types/coordinates';
 import IMap from '../../../shared/types/map';
 import ITile from '../../../shared/types/tile';
 import Map from './component/map';
@@ -25,6 +26,7 @@ class App extends React.Component<{}, State> {
             map: {
                 name: '',
                 tiles: [[]],
+                blockingTiles: [],
             },
             displayedMapList: false,
             loadedMaps: [],
@@ -39,7 +41,9 @@ class App extends React.Component<{}, State> {
                     getCurrentTilesetCell={this.getCurrentTilesetCell}
                     tiles={this.state.map.tiles}
                     setTiles={this.setTiles}
+                    setBlockingTiles={this.setBlockingTiles}
                     currentLayer={this.state.currentLayer}
+                    blockingTiles={this.state.map.blockingTiles}
                 />
                 <Menu
                     name={this.state.map.name}
@@ -132,6 +136,12 @@ class App extends React.Component<{}, State> {
      * Load the selected map
      */
     loadMap = (map: IMap): void => {
+        if (!map.blockingTiles) {
+            map.blockingTiles = [];
+        }
+        if (!map.tiles) {
+            map.tiles = [[]];
+        }
         this.setState({
             ...this.state,
             map,
@@ -149,6 +159,7 @@ class App extends React.Component<{}, State> {
             map: {
                 name: '',
                 tiles: [[]],
+                blockingTiles: [],
             },
             currentLayer: 1,
         });
@@ -163,6 +174,16 @@ class App extends React.Component<{}, State> {
         this.setState({
             ...this.state,
             map: { ...this.state.map, tiles: mapTiles },
+        });
+    };
+
+    /**
+     * Set the blocking tiles to the current map
+     */
+    setBlockingTiles = (blockingTiles: ICoordinates[]): void => {
+        this.setState({
+            ...this.state,
+            map: { ...this.state.map, blockingTiles },
         });
     };
 

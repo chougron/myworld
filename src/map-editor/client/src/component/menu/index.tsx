@@ -15,6 +15,8 @@ interface Props {
 }
 
 class Menu extends React.Component<Props> {
+    static BLOCKING_LAYER: number = -1;
+
     nameInput: HTMLInputElement;
     layerSelect: HTMLSelectElement;
 
@@ -27,6 +29,7 @@ class Menu extends React.Component<Props> {
                 </option>,
             );
         }
+        options.push(<option value={Menu.BLOCKING_LAYER}>Blocking Layer</option>);
 
         return (
             <div id="menu">

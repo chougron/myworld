@@ -1,6 +1,6 @@
 import * as React from 'react';
-import ITile from '../../../../../shared/types/tile';
 import Image from '../../../../../shared/medias/tileset.png';
+import ITile from '../../../../../shared/types/tile';
 import { getCoordinatesFromTilesetNumber } from '../../services/coordinates';
 import Tileset from '../tileset';
 
@@ -31,7 +31,7 @@ class Tile extends React.Component<Props> {
         const tilesetCoordinates = getCoordinatesFromTilesetNumber(this.props.tile.tilesetNumber, Tileset.WIDTH);
         const backgroundPositionX = -tilesetCoordinates.x * Tile.SIZE - offsetBackground;
         const backgroundPositionY = -tilesetCoordinates.y * Tile.SIZE - offsetBackground;
-        const zIndex = 10 + this.props.layer;
+        const zIndex = 10 + this.props.layer * 2 + 1;
 
         return (
             <div
