@@ -11,4 +11,8 @@ const loadMaps = async (): Promise<IMap[]> => {
     return answer.data;
 };
 
-export { saveMap, loadMaps };
+const removeMap = async (map: IMap): Promise<void> => {
+    const answer = await Axios.delete(`http://localhost:8999/maps/${map._id}`);
+};
+
+export { saveMap, loadMaps, removeMap };

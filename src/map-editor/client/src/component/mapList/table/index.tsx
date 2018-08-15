@@ -5,6 +5,7 @@ import './style.css';
 interface Props {
     maps: IMap[];
     loadMap: (map: IMap) => void;
+    deleteMap: (map: IMap) => void;
 }
 
 class MapListTable extends React.Component<Props> {
@@ -23,6 +24,7 @@ class MapListTable extends React.Component<Props> {
                             <td>{map.name}</td>
                             <td>
                                 <input type="submit" value="Load" onClick={() => this.props.loadMap(map)} />
+                                <input type="submit" value="Delete" onClick={() => this.props.deleteMap(map)} />
                             </td>
                         </tr>
                     ))}

@@ -19,6 +19,24 @@ services:
     ports:
       - "8999:8999"
 
+  game-client:
+    image: node:9
+    working_dir: /src/game/client
+    entrypoint: ./entrypoint.sh
+    volumes:
+      - ./src:/src/
+    ports:
+      - "9999:8080"
+
+  game-server:
+    image: node:9
+    working_dir: /src/game/server
+    entrypoint: ./entrypoint.sh
+    volumes:
+      - ./src:/src/
+    ports:
+      - "9888:9888"
+
   mongo:
     image: mongo:4.0
     restart: always

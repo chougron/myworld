@@ -7,7 +7,7 @@ import Map from './component/map';
 import MapList from './component/mapList';
 import Menu from './component/menu';
 import Tileset from './component/tileset';
-import { loadMaps, saveMap } from './services/map';
+import { loadMaps, saveMap, removeMap } from './services/map';
 
 interface State {
     selected: ITile | undefined;
@@ -58,7 +58,9 @@ class App extends React.Component<{}, State> {
                     addLayer={this.addLayer}
                 />
                 <Tileset selectTile={this.selectTile} />
-                {this.state.displayedMapList && <MapList maps={this.state.loadedMaps} loadMap={this.loadMap} />}
+                {this.state.displayedMapList && (
+                    <MapList maps={this.state.loadedMaps} loadMap={this.loadMap} deleteMap={this.deleteMap} />
+                )}
             </>
         );
     }
@@ -148,6 +150,17 @@ class App extends React.Component<{}, State> {
             displayedMapList: false,
             currentLayer: 1,
         });
+    };
+
+    /**
+     * Delete a map from the map list
+     */
+    deleteMap = async (map: IMap): Promise<void> => {
+        await removeMap(map);
+        if (map._id === this.state.map._id) {
+            this.newMap();
+        }
+        this.displayMapList();
     };
 
     /**

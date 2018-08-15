@@ -28,4 +28,16 @@ const getAll = async (): Promise<IMap[]> => {
     return collection.find().toArray();
 };
 
-export { saveOrReplace, getAll };
+const remove = async (id: string): Promise<void> => {
+    const collection = await getCollection();
+    const oId = new ObjectId(id);
+    await collection.remove({ _id: oId });
+};
+
+const getById = async (id: string): Promise<IMap> => {
+    const collection = await getCollection();
+    const oId = new ObjectId(id);
+    return collection.findOne({ _id: oId });
+};
+
+export { saveOrReplace, getAll, remove, getById };
