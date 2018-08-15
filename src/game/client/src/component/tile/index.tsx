@@ -5,9 +5,6 @@ import { getCoordinatesFromTilesetNumber } from '../../../../../shared/service/t
 
 interface Props {
     tile: ITile;
-    onClick?: () => void;
-    selected?: boolean;
-    border?: boolean;
     layer: number;
 }
 
@@ -22,20 +19,16 @@ class Tile extends React.Component<Props> {
         const position = 'absolute';
         const image = Image;
         const backgroundImage = `url(${image})`;
-        const border = this.props.border ? (this.props.selected ? '2px solid red' : '1px solid black') : 'none';
         const boxSizing = 'border-box';
 
-        const offsetBackground = this.props.border ? (this.props.selected ? 2 : 1) : 0;
-
         const tilesetCoordinates = getCoordinatesFromTilesetNumber(this.props.tile.tilesetNumber);
-        const backgroundPositionX = -tilesetCoordinates.x * Tile.SIZE - offsetBackground;
-        const backgroundPositionY = -tilesetCoordinates.y * Tile.SIZE - offsetBackground;
+        const backgroundPositionX = -tilesetCoordinates.x * Tile.SIZE;
+        const backgroundPositionY = -tilesetCoordinates.y * Tile.SIZE;
         const zIndex = 10 + this.props.layer * 2 + 1;
 
         return (
             <div
                 className="tile"
-                onClick={this.props.onClick}
                 style={{
                     top,
                     left,
@@ -45,7 +38,6 @@ class Tile extends React.Component<Props> {
                     backgroundImage,
                     backgroundPositionX,
                     backgroundPositionY,
-                    border,
                     boxSizing,
                     zIndex,
                 }}
