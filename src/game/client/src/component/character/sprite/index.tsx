@@ -1,15 +1,9 @@
 import * as React from 'react';
 import Image from '../../../../../../shared/medias/sprite.png';
-
-export enum Position {
-    BOTTOM = 0,
-    LEFT = 1,
-    RIGHT = 2,
-    TOP = 3,
-}
+import IDirection from '../../../../../../shared/types/direction';
 
 interface Props {
-    position: Position;
+    direction: IDirection;
     moving?: boolean;
 }
 
@@ -42,7 +36,7 @@ class Sprite extends React.Component<Props, State> {
         const image = Image;
         const backgroundImage = `url(${image})`;
         const backgroundPositionX = this.getBackGroundPositionX();
-        const backgroundPositionY = -Sprite.HEIGHT * this.props.position;
+        const backgroundPositionY = -Sprite.HEIGHT * this.props.direction;
         const width = Sprite.WIDTH;
         const height = Sprite.HEIGHT;
         const zIndex = 10000;

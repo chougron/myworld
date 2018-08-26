@@ -4,9 +4,14 @@ import Tile from '../tile';
 import './style.css';
 import ICharacter from '../../../../../shared/types/character';
 import Character from '../character';
+import { State } from '../../reducers';
+import { connect } from 'react-redux';
 
-interface Props {
+interface Props extends StateProps {
     tiles: ITile[][];
+}
+
+interface StateProps {
     characters: ICharacter[];
 }
 
@@ -25,4 +30,13 @@ class Map extends React.Component<Props> {
     }
 }
 
-export default Map;
+const mapStateToProps = (state: State, props: Props): StateProps => {
+    return {
+        characters: state.characters,
+    };
+};
+
+export default connect<StateProps, {}>(
+    mapStateToProps,
+    {},
+)(Map);

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Sprite, { Position } from './sprite';
+import Sprite from './sprite';
 import ICharacter from '../../../../../shared/types/character';
 import Tile from '../tile';
 
@@ -15,7 +15,7 @@ class Character extends React.Component<Props> {
 
         return (
             <div style={{ top, left, position }}>
-                <Sprite position={Position.BOTTOM} moving={true} />
+                <Sprite direction={this.props.character.direction} moving={true} />
             </div>
         );
     }
