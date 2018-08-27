@@ -1,6 +1,15 @@
-import { createStore } from 'redux';
+import { createStore, Store, AnyAction } from 'redux';
 import reducers from '../reducers';
+import { devToolsEnhancer } from 'redux-devtools-extension';
+import ICharacter from '../../../../shared/types/character';
 
-const store = createStore(reducers);
+export type State = {
+    characters: ICharacter[];
+    player: {
+        character: ICharacter;
+    };
+};
+
+const store: Store<State, AnyAction> = createStore(reducers, devToolsEnhancer({}));
 
 export default store;

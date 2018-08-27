@@ -15,7 +15,7 @@ class Character extends React.Component<Props> {
 
         return (
             <div style={{ top, left, position }}>
-                <Sprite direction={this.props.character.direction} moving={true} />
+                <Sprite direction={this.props.character.direction} moving={this.props.character.moving} />
             </div>
         );
     }

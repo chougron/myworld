@@ -4,7 +4,7 @@ import Tile from '../tile';
 import './style.css';
 import ICharacter from '../../../../../shared/types/character';
 import Character from '../character';
-import { State } from '../../reducers';
+import { State } from '../../store';
 import { connect } from 'react-redux';
 
 interface Props extends StateProps {
@@ -13,6 +13,7 @@ interface Props extends StateProps {
 
 interface StateProps {
     characters: ICharacter[];
+    playerCharacter: ICharacter;
 }
 
 class Map extends React.Component<Props> {
@@ -20,6 +21,7 @@ class Map extends React.Component<Props> {
         return (
             <div id="map">
                 <div id="map-layer">
+                    {this.props.playerCharacter && <Character character={this.props.playerCharacter} />}
                     {this.props.characters.map((character: ICharacter) => <Character character={character} />)}
                     {this.props.tiles.map((tiles: ITile[], index: number) =>
                         tiles.map((tile: ITile, key: number) => <Tile tile={tile} layer={index} key={key} />),
@@ -33,6 +35,7 @@ class Map extends React.Component<Props> {
 const mapStateToProps = (state: State, props: Props): StateProps => {
     return {
         characters: state.characters,
+        playerCharacter: state.player.character,
     };
 };
 

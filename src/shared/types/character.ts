@@ -5,4 +5,5 @@ export default interface ICharacter {
     _id: string;
     position: ICoordinates;
     direction: IDirection;
+    moving: boolean;
 }
