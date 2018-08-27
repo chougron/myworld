@@ -23,7 +23,6 @@ class KeyboardManager extends React.Component {
             case 'ArrowRight':
                 movePlayerCharacter(IDirection.RIGHT);
         }
-        console.log(event);
     };
 }
 
